@@ -23,12 +23,8 @@ Reset_Handler ; also indicate where to start
  
 Start ; user code label for the start (optional) 
  ;main
- ;MOV r0, #0xbeef
- ;BL PrintHex
- ;MOV r0, #0xf00d
  
- ;initialise process stack
- 
+ ;initialise process stack 
  LDR r1, =0x20010000
  MSR PSP, r1
  
@@ -40,46 +36,9 @@ Start ; user code label for the start (optional)
  
  LDR r0, =osrunning
  BL PrintString ;we're still in handler mode, so we're allowed to directly access print
- ;PUSH {r0}  
- 
- ;MRS r1, MSP
- ;MOV r0, #0 
+
  ; And re-print it on the terminal 
  BL Mode_Switch 
- ;POP {r0} 
-; LDR r0, [r1]
- ;BL PrintHex
- ;LDR r0, =youlike 
- ;BL PrintString 
- ;MOV r0, #0 
- ;BL Switch
- ;BLX r0
- ;MOV r0, #1
- ;BL Switch
- ;BLX r0
- ;MOV r0, #4
- ;BL Switch
- ;BLX r0
- ;MOV r0, #4
- 
- ;MOV r2, #5 
- ;MOV r7, #6
- ;LDR r0, =osrunning
- ;BL PrintString 
- 
- ;MOV r2, #5 
- ;LDR r0, =HelloWorld 
- ;SVC 5
- ;LDR r0, =HelloWorld 
- ;SVC 5
- ;LDR r0, =HelloWorld 
- ;SVC 5
- ;LDR r0, =osrunning
- ;BL PrintString 
- ;LDR r0, =osrunning
- ;BL PrintString 
- 
- 
  
  LDR r1, =ProcessTable; initialise counter 
  ;LDR r2, =ProcessTable 
@@ -99,14 +58,7 @@ MainLoopEnd
  
  LDR r0, =osfinishing
  SVC 4
- ;SVC 1
- ;SVC 2
- ;SVC 3
- ;SVC 1
  
- ;MOV r1, #0xbeef
- ;MOV r1, #0xbeef
- ;MOV r1, #0xbeef
  B Stop
  
 SVC_Handler
@@ -147,9 +99,7 @@ SVC_Kill
  pop{r0}; get current process stack pointer
  push{r1}; return id counter to stack
  push{r2} ;return lr
- ;we are now done with the main stack
- 
- 
+ ;we are now done with the main stack 
  
  ;resume last process here
  
@@ -167,8 +117,7 @@ SVC_Create
  pop{r3}
  ;get the id
  pop{r1}
- ADD r1, #1 ;r1 now contains my id
- 
+ ADD r1, #1 ;r1 now contains my id 
  
  ;work on the process stack
  MRS r2, PSP
@@ -195,9 +144,6 @@ SVC_Create
  ;we are now done with updating the main stack
  
  ;work on the process stack
-
- 
- 
  
  ;at this point, 
  ;0xFFFFFFFF default LR
@@ -227,8 +173,7 @@ SVC_Create
  MOV r8, #0
  MOV r9, #0
  MOV r10, #0
- MOV r11, #0
- 
+ MOV r11, #0 
  
  ;return to our newly created process, via the SVC_Handler
  BX lr
@@ -243,21 +188,7 @@ Switch ;put the address of the corresponding process into r0
  ;PUSH{r0}
  BLGT Err_ProcessOutOfRange
  BX lr 
- 
-Start_Process; ;use process address in r0, generate id from data
- 
-Resume_Process; use the process id in r0 to resume the process
- 
- ;BX pc
- 
-Pause_Process; use the process id in r0 to pause the current process
- 
- ;BX lr
- 
-Kill_Process; use the process id in r0 to kill the current process
 
- BX lr
- 
 Mode_Switch 
  MOV r0, #0x2 ; set stack to PSP 
  MSR CONTROL, r0 ; do it 
