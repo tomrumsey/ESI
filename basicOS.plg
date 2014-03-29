@@ -1,0 +1,91 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+O:\Documents\ESI\basicOS.uvproj
+Project File Date:  03/25/2014
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1688 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1692 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1704 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1708 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+base.s(33): error: A1114E: Expected register relative expression
+".\basicOS.axf" - 1 Errors, 0 Warning(s).
+Target not created
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1712 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1708 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1708 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1708 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.
+Build target 'Target 1'
+assembling base.s...
+linking...
+Program Size: Code=1708 RO-data=8 RW-data=24 ZI-data=1024  
+".\basicOS.axf" - 0 Errors, 0 Warning(s).
+Load "O:\\Documents\\ESI\\basicOS.axf" 
+Erase Done.
+Programming Done.
+Verify OK.

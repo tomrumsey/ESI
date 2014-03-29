@@ -1,0 +1,1 @@
+.\base.o: base.s
