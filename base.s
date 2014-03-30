@@ -34,7 +34,6 @@ Start ; user code label for the start (optional)
  push{r0} ;push main id
  push{r1} ;push last main stack position
  push{r0} ;push lastid
- push{r0} ;push lastid
  
  LDR r0, =osrunning
  BL PrintString ;we're still in handler mode, so we're allowed to directly access print
@@ -42,9 +41,8 @@ Start ; user code label for the start (optional)
  ; And re-print it on the terminal 
  BL Mode_Switch 
  
- ;test PrintDecimal
- ;MOV r0, #50012
- ;SVC 2
+ MOV r0, #50012
+ SVC 2
  
  LDR r1, =ProcessTable; initialise counter 
  ;LDR r2, =ProcessTable 
@@ -70,7 +68,6 @@ MainLoopEnd
 SVC_Handler
  ;MOV r0, #0xbeef
  PUSH{lr}
- PUSH{lr}
  ;BL PrintHex
  MOV r3, r0
  ;get SVC operand
@@ -92,7 +89,6 @@ SVC_Handler
  BLX r1
  
  POP{lr}
- POP{lr}
  ;MOV r2, #4
  ;POP{r0}
  ;MOV r0, #42
@@ -101,16 +97,11 @@ SVC_Handler
  
 SVC_Kill
  pop{r0} ;pop lr from SVC_Handler
- pop{r0} ;pop lr from SVC_Handler
- pop{r1} ;pop id counter
  pop{r1} ;pop id counter
  pop{r2, r3}; pop data about current process, to throw away
  mov r2, r0
  pop{r0}; get current process stack pointer
- push{r0}; put it back so the stack is preserved
  push{r1}; return id counter to stack
- push{r1}; return id counter to stack
- push{r2} ;return lr
  push{r2} ;return lr
  ;we are now done with the main stack 
  
@@ -128,9 +119,7 @@ SVC_Kill
 SVC_Create
  ;get lr saved by previous
  pop{r3}
- pop{r3}
  ;get the id
- pop{r1}
  pop{r1}
  ADD r1, #1 ;r1 now contains my id 
  
@@ -155,8 +144,6 @@ SVC_Create
  
  push{r1, r2} ;add my id and initial sp (this value doesnt matter while I'm running) to MSP`
  push{r1} ;update the last id value
- push{r1}
- push{r5}
  push{r5}
  ;we are now done with updating the main stack
  
