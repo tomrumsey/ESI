@@ -9,6 +9,7 @@
  IMPORT PrintString 
  IMPORT PrintChar 
  IMPORT PrintHello 
+ IMPORT PrintDecimal
  IMPORT fputc 
  
  IMPORT SystemInit ; link to C code 
@@ -39,6 +40,9 @@ Start ; user code label for the start (optional)
 
  ; And re-print it on the terminal 
  BL Mode_Switch 
+ 
+ MOV r0, #50012
+ SVC 2
  
  LDR r1, =ProcessTable; initialise counter 
  ;LDR r2, =ProcessTable 
@@ -133,7 +137,7 @@ SVC_Create
  
  LDR r3, =0x20010000
  
- MOV r4, #500
+ MOV r4, #400
  MUL r4, r4, r1
  
  ADD r2, r3, r4
@@ -244,7 +248,7 @@ ProcessTableEnd
 SVCTable
  DCD SVC_Kill
  DCD PrintHex
- DCD HelloMars; FIXME, should be print decimal
+ DCD PrintDecimal
  DCD PrintChar
  DCD PrintString
  DCD SVC_Create

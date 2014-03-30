@@ -56,3 +56,8 @@ void PrintHex(unsigned value)
 {
 	printf("%x\n", value) ;
 }
+
+void PrintDecimal(unsigned value)
+{
+	printf("%d\n", value) ;
+}
