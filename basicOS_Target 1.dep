@@ -1,7 +1,7 @@
 Dependencies for Project 'basicOS', Target 'Target 1': (DO NOT MODIFY !)
-F (.\base.s)(0x5337675D)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\ST\STM32F4xx--list .\base.lst --xref -o .\base.o --depend .\base.d)
+F (.\base.s)(0x53376AA4)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\ST\STM32F4xx--list .\base.lst --xref -o .\base.o --depend .\base.d)
 F (.\startup_simple-M4.s)(0x5333260A)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\ST\STM32F4xx--list .\startup_simple-m4.lst --xref -o .\startup_simple-m4.o --depend .\startup_simple-m4.d)
-F (.\print.c)(0x5337670B)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\ST\STM32F4xx-DSTM32F40XX-o .\print.o --omf_browse .\print.crf --depend .\print.d)
+F (.\print.c)(0x53376A93)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\ST\STM32F4xx-DSTM32F40XX-o .\print.o --omf_browse .\print.crf --depend .\print.d)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C819B4)
 I (C:\Keil\ARM\Inc\ST\STM32F4xx\stm32f4xx.h)(0x520A09E4)
 I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x520A09A2)

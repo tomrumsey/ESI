@@ -40,7 +40,8 @@ void PrintHello()
 void PrintString(char *string)
 {
 	printf(string) ;
-	printf("\n") ;}
+	printf("\n") ;
+}
 
 void PrintChar(char character)
 {
@@ -55,9 +56,4 @@ void PrintChar(char character)
 void PrintHex(unsigned value)
 {
 	printf("%x\n", value) ;
-}
-
-void PrintDecimal(unsigned value)
-{
-	printf("%d\n", value) ;
 }
