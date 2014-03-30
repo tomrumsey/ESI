@@ -10,6 +10,7 @@
  IMPORT PrintChar 
  IMPORT PrintHello 
  IMPORT fputc 
+ IMPORT ITM_Write
  
  IMPORT SystemInit ; link to C code 
  EXPORT Reset_Handler ; export the reset handler’s address to C 
@@ -40,8 +41,8 @@ Start ; user code label for the start (optional)
  ; And re-print it on the terminal 
  BL Mode_Switch 
  
- ;MOV r0, #50012
- ;SVC 2
+ MOV r0, #50012
+ SVC 2
  
  LDR r1, =ProcessTable; initialise counter 
  ;LDR r2, =ProcessTable 
@@ -181,6 +182,43 @@ SVC_Create
  ;return to our newly created process, via the SVC_Handler
  BX lr
  
+ 
+PrintDecimal
+ push{r4}
+ MOV r2, #10
+ 
+ MOV r3, sp;store original address
+ 
+DecomposeStart
+ 
+ ;establish last deciaml digit
+ UDIV r1, r0, r2
+ MUL r4, r1, r2;get r0-r0%10
+ ;subtract from origin number to get r0%10
+ SUB r0, r0, r4
+ ;push it
+ push{r0}
+ ;update r0 as r0/10
+ MOV r0, r1 ;
+ 
+ ;if r0 = 0, we are done
+ CMP r0, #0
+ BNE DecomposeStart
+
+DecomposeEnd
+ MOV r4, lr
+;Note: we are guaranteed the above pushed at least once. This is convenient
+DisplayStart
+ pop{r0}
+ BL ITM_Write; TODO: update with correct function. Digits themselves are correct
+ MOV r1, sp
+ CMP r3, r1
+ BNE DisplayStart
+DisplayEnd
+ MOV lr, r4
+ pop{r4}
+ BX lr
+ 
 Switch ;put the address of the corresponding process into r0
  ;POP{r0}
  MOV r1, r0 ;move the id, so we can overwrite r0
@@ -224,6 +262,8 @@ Err_ProcessOutOfRange
  SVC 4
  BL Stop
  
+
+ 
 Err_SVCOutOfRange 
  LDR r0, =svcoutofrangerr 
  SVC 4
@@ -247,7 +287,7 @@ ProcessTableEnd
 SVCTable
  DCD SVC_Kill
  DCD PrintHex
- DCD HelloWorld ; fixme
+ DCD PrintDecimal ; fixme
  DCD PrintChar
  DCD PrintString
  DCD SVC_Create
