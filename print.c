@@ -43,6 +43,11 @@ void PrintString(char *string)
 	printf("\n") ;
 }
 
+void PrintStringNoReturn(char *string)
+{
+	printf(string) ;
+}
+
 void PrintChar(char character)
 {
 	char string[3] ; 

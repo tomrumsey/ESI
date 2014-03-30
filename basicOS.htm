@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\basicOS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\basicOS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 00:23:18 2014
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 00:49:49 2014
 <BR><P>
 <H3>Maximum Stack Usage =         40 bytes + Unknown(Functions without stacksize, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -48,7 +48,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> printf5.o(i.__0printf$5)
 </UL>
-<P><STRONG><a name="[17]"></a>ITM_Write</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, print.o(.text), UNUSED)
+<P><STRONG><a name="[18]"></a>ITM_Write</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, print.o(.text), UNUSED)
 
 <P><STRONG><a name="[d]"></a>PrintHello</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, print.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
@@ -64,6 +64,14 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
+<P><STRONG><a name="[f]"></a>PrintStringNoReturn</STRONG> (Thumb, 12 bytes, Stack size 8 bytes, print.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = PrintStringNoReturn &rArr; __2printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+</UL>
+<BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
+</UL>
+
 <P><STRONG><a name="[8]"></a>PrintChar</STRONG> (Thumb, 30 bytes, Stack size 16 bytes, print.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = PrintChar &rArr; __2printf
 </UL>
@@ -71,7 +79,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
-<P><STRONG><a name="[f]"></a>PrintCharNoReturn</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, print.o(.text))
+<P><STRONG><a name="[10]"></a>PrintCharNoReturn</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, print.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = PrintCharNoReturn &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
@@ -86,59 +94,60 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
-<P><STRONG><a name="[10]"></a>SystemInit</STRONG> (Thumb, 88 bytes, Stack size 8 bytes, system_stm32f4xx.o(.text))
+<P><STRONG><a name="[11]"></a>SystemInit</STRONG> (Thumb, 88 bytes, Stack size 8 bytes, system_stm32f4xx.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = SystemInit &rArr; SetSysClock
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetSysClock
+<BR>[Calls]<UL><LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetSysClock
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Handler
 </UL>
 
-<P><STRONG><a name="[18]"></a>SystemCoreClockUpdate</STRONG> (Thumb, 174 bytes, Stack size 16 bytes, system_stm32f4xx.o(.text), UNUSED)
+<P><STRONG><a name="[19]"></a>SystemCoreClockUpdate</STRONG> (Thumb, 174 bytes, Stack size 16 bytes, system_stm32f4xx.o(.text), UNUSED)
 
-<P><STRONG><a name="[12]"></a>__aeabi_uldivmod</STRONG> (Thumb, 98 bytes, Stack size 40 bytes, uldiv.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsr
-<LI><a href="#[14]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsl
+<P><STRONG><a name="[13]"></a>__aeabi_uldivmod</STRONG> (Thumb, 98 bytes, Stack size 40 bytes, uldiv.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[14]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsr
+<LI><a href="#[15]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsl
 </UL>
-<BR>[Called By]<UL><LI><a href="#[16]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
-</UL>
-
-<P><STRONG><a name="[14]"></a>__aeabi_llsl</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
-<BR><BR>[Called By]<UL><LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
+<BR>[Called By]<UL><LI><a href="#[17]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
 </UL>
 
-<P><STRONG><a name="[19]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
-
-<P><STRONG><a name="[13]"></a>__aeabi_llsr</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
-<BR><BR>[Called By]<UL><LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
+<P><STRONG><a name="[15]"></a>__aeabi_llsl</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
+<BR><BR>[Called By]<UL><LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 
-<P><STRONG><a name="[1a]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
+<P><STRONG><a name="[1a]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
+
+<P><STRONG><a name="[14]"></a>__aeabi_llsr</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
+<BR><BR>[Called By]<UL><LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
+</UL>
+
+<P><STRONG><a name="[1b]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
 
 <P><STRONG><a name="[c]"></a>Reset_Handler</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32 + Unknown Stack Size
 <LI>Call Chain = Reset_Handler &rArr; PrintString &rArr; __2printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
+<BR>[Calls]<UL><LI><a href="#[11]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
 <LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
 </UL>
 
 <P><STRONG><a name="[1]"></a>SVC_Handler</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
 <BR>[Address Reference Count : 1]<UL><LI> startup_simple-m4.o(RESET)
 </UL>
-<P><STRONG><a name="[15]"></a>__0printf$5</STRONG> (Thumb, 22 bytes, Stack size 24 bytes, printf5.o(i.__0printf$5), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[16]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
+<P><STRONG><a name="[16]"></a>__0printf$5</STRONG> (Thumb, 22 bytes, Stack size 24 bytes, printf5.o(i.__0printf$5), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[17]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_core
 </UL>
 
-<P><STRONG><a name="[1b]"></a>__1printf$5</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf5.o(i.__0printf$5), UNUSED)
+<P><STRONG><a name="[1c]"></a>__1printf$5</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf5.o(i.__0printf$5), UNUSED)
 
 <P><STRONG><a name="[e]"></a>__2printf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf5.o(i.__0printf$5))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = __2printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
+<BR>[Called By]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintStringNoReturn
+<LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
 <LI><a href="#[6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintHex
 <LI><a href="#[d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintHello
-<LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintCharNoReturn
+<LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintCharNoReturn
 <LI><a href="#[8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintChar
 </UL>
 <P>
@@ -146,6 +155,12 @@ Global Symbols
 Local Symbols
 </H3>
 <P><STRONG><a name="[5]"></a>SVC_Kill</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
+<LI>Call Chain = SVC_Kill &rArr; PrintDecimal &rArr; PrintCharNoReturn &rArr; __2printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintStringNoReturn
+<LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintDecimal
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
 <P><STRONG><a name="[a]"></a>SVC_Create</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
@@ -156,7 +171,9 @@ Local Symbols
 <LI>Call Chain = PrintDecimal &rArr; PrintCharNoReturn &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
-<LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintCharNoReturn
+<LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintCharNoReturn
+</UL>
+<BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
@@ -169,16 +186,16 @@ Local Symbols
 <P><STRONG><a name="[4]"></a>HelloGalaxy</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
-<P><STRONG><a name="[11]"></a>SetSysClock</STRONG> (Thumb, 218 bytes, Stack size 12 bytes, system_stm32f4xx.o(.text))
+<P><STRONG><a name="[12]"></a>SetSysClock</STRONG> (Thumb, 218 bytes, Stack size 12 bytes, system_stm32f4xx.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SetSysClock
 </UL>
-<BR>[Called By]<UL><LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
+<BR>[Called By]<UL><LI><a href="#[11]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
 </UL>
 
-<P><STRONG><a name="[16]"></a>_printf_core</STRONG> (Thumb, 658 bytes, Stack size 104 bytes, printf5.o(i._printf_core), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
+<P><STRONG><a name="[17]"></a>_printf_core</STRONG> (Thumb, 658 bytes, Stack size 104 bytes, printf5.o(i._printf_core), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[13]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
-<BR>[Called By]<UL><LI><a href="#[15]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0printf$5
+<BR>[Called By]<UL><LI><a href="#[16]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0printf$5
 </UL>
 <P>
 <H3>

@@ -11,6 +11,7 @@
  IMPORT PrintHello 
  IMPORT fputc 
  IMPORT PrintCharNoReturn
+ IMPORT PrintStringNoReturn
  
  IMPORT SystemInit ; link to C code 
  EXPORT Reset_Handler ; export the reset handler’s address to C 
@@ -102,20 +103,25 @@ SVC_Kill
  pop{r0} ;pop lr from SVC_Handler
  pop{r1} ;pop id counter
  pop{r2, r3}; pop data about current process, to throw away
- mov r2, r0
+ 
+ mov r3, r0
  pop{r0}; get current process stack pointer
  push{r1}; return id counter to stack
- push{r2} ;return lr
+ push{r3} ;return lr
  ;we are now done with the main stack 
  
  ;resume last process here
  
  LDMFD r0!, {r11, r10, r9, r8, r7, r6, r5, r4} ;restore other registers
- 
+ MOV r6, lr
+ MOV r4, r2
  MSR PSP, r0; update PSP. there is no longer any way of recovering the old process directly 
- 
+ LDR r0, =svckillprocess
+ BL PrintStringNoReturn
+ MOV r0, r4
+ BL PrintDecimal
  ;normal recovery should now be in play
-
+ MOV lr, r6
  BX lr
  
 ;create the process addressed by r0
@@ -125,6 +131,8 @@ SVC_Create
  ;get the id
  pop{r1}
  ADD r1, #1 ;r1 now contains my id 
+ 
+ 
  
  ;work on the process stack
  MRS r2, PSP
@@ -160,9 +168,9 @@ SVC_Create
  MOV r4, #0xFFFFFFFF; put default LR value in r0
  MOV r7, r2
  ;reset remaining main registers
- MOV r0, #1
- MOV r1, #2
- MOV r2, #3
+ MOV r0, #0
+ MOV r1, #0
+ MOV r2, #0
  MOV r3, #0  
  
  
@@ -325,6 +333,14 @@ procoutofrangerr
 
 svcoutofrangerr
  DCB "Error: requested SVC id is out of range",0  
+
+	 
+svccreateprocess
+ DCB "Creating process #",0  
+ ALIGN 
+	 
+svckillprocess
+ DCB "Killing process #",0  
  ALIGN 
  
  
