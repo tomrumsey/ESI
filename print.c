@@ -53,6 +53,15 @@ void PrintChar(char character)
 	printf(p) ;
 }
 
+void PrintCharNoReturn(char character)
+{
+	char string[2] ; 
+	char *p = &string[0] ;
+	string[0] = character ;
+	string[1] = '\0' ;
+	printf(p) ;
+}
+
 void PrintHex(unsigned value)
 {
 	printf("%x\n", value) ;

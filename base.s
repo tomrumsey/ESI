@@ -10,7 +10,7 @@
  IMPORT PrintChar 
  IMPORT PrintHello 
  IMPORT fputc 
- IMPORT ITM_Write
+ IMPORT PrintCharNoReturn
  
  IMPORT SystemInit ; link to C code 
  EXPORT Reset_Handler ; export the reset handler’s address to C 
@@ -42,6 +42,9 @@ Start ; user code label for the start (optional)
  BL Mode_Switch 
  
  MOV r0, #50012
+ SVC 2
+ 
+ MOV r0, #0xFFFFFFFF
  SVC 2
  
  LDR r1, =ProcessTable; initialise counter 
@@ -184,39 +187,42 @@ SVC_Create
  
  
 PrintDecimal
- push{r4}
+ push{r4, r6, r7, r8}
  MOV r2, #10
  
- MOV r3, sp;store original address
+ MOV r7, sp;store original address
  
 DecomposeStart
  
  ;establish last deciaml digit
- UDIV r1, r0, r2
- MUL r4, r1, r2;get r0-r0%10
+ UDIV r8, r0, r2
+ MUL r4, r8, r2;get r0-r0%10
  ;subtract from origin number to get r0%10
  SUB r0, r0, r4
  ;push it
  push{r0}
  ;update r0 as r0/10
- MOV r0, r1 ;
+ MOV r0, r8 ;
  
  ;if r0 = 0, we are done
  CMP r0, #0
  BNE DecomposeStart
 
 DecomposeEnd
- MOV r4, lr
+ MOV r6, lr
 ;Note: we are guaranteed the above pushed at least once. This is convenient
 DisplayStart
  pop{r0}
- BL ITM_Write; TODO: update with correct function. Digits themselves are correct
- MOV r1, sp
- CMP r3, r1
+ ADD r0, r0, #48
+ BL PrintCharNoReturn; TODO: update with correct function. Digits themselves are correct
+ MOV r8, sp
+ CMP r7, r8
  BNE DisplayStart
 DisplayEnd
- MOV lr, r4
- pop{r4}
+ LDR r0, =newline
+ BL PrintString
+ MOV lr, r6
+ pop{r4, r6, r7, r8}
  BX lr
  
 Switch ;put the address of the corresponding process into r0
@@ -304,6 +310,9 @@ osfinishing
  
 helloworld 
  DCB "Hello, world!",0  
+ 
+newline 
+ DCB "",0  
  
 hellomars 
  DCB "Hello, mars!",0  
