@@ -36,17 +36,19 @@ Start ; user code label for the start (optional)
  push{r1} ;push last main stack position
  push{r0} ;push lastid
  
+ MOV r0, #0 ;dummy print
+ BL PrintChar
+ 
  LDR r0, =osrunning
  BL PrintString ;we're still in handler mode, so we're allowed to directly access print
 
- ; And re-print it on the terminal 
  BL Mode_Switch 
  
- MOV r0, #50012
- SVC 2
+ ;MOV r0, #50012
+ ;SVC 2
  
- MOV r0, #0xFFFFFFFF
- SVC 2
+ ;MOV r0, #0xFFFFFFFF
+ ;SVC 2
  
  LDR r1, =ProcessTable; initialise counter 
  ;LDR r2, =ProcessTable 
@@ -100,6 +102,9 @@ SVC_Handler
  BX lr
  
 SVC_Kill
+ MOV r1, #0xFFFFFFFF
+ CMP r0, r1
+ BLEQ Stop
  pop{r0} ;pop lr from SVC_Handler
  pop{r1} ;pop id counter
  pop{r2, r3}; pop data about current process, to throw away
@@ -139,13 +144,24 @@ SVC_Create
  ;MOV r4, #0x5464
  STMFD r2!, {r11, r10, r9, r8, r7, r6, r5, r4} ;push all remaining registers to stack
  
- ;r5 is saved, so we can reuse it
- MOV r5, r3
+ ;r6 is saved, so we can reuse it
+ MOV r6, r3
  
  pop{r9}; dispose of the previous stackpointer for the *current* process
  ;put the final sp in r2 
  push{r2} ;update it 
  
+ MOV r4, r1
+ MOV r5, r0 ;put new pc in r5
+ push{lr}
+ LDR r0, =svccreateprocess
+ BL PrintStringNoReturn
+ 
+ MOV r0, r4
+ BL PrintDecimal
+ 
+ pop{lr}
+ MOV r1, r4
  LDR r3, =0x20010000
  
  MOV r4, #400
@@ -155,7 +171,7 @@ SVC_Create
  
  push{r1, r2} ;add my id and initial sp (this value doesnt matter while I'm running) to MSP`
  push{r1} ;update the last id value
- push{r5}
+ push{r6} ;put the lr back
  ;we are now done with updating the main stack
  
  ;work on the process stack
@@ -164,7 +180,7 @@ SVC_Create
  ;0xFFFFFFFF default LR
  ;0x01000000 default xPSR
  MOV r6, #0x01000000; put default xPSR value in r0 
- MOV r5, r0 ;put new pc in r5
+ ;put new pc in r5 (see above)
  MOV r4, #0xFFFFFFFF; put default LR value in r0
  MOV r7, r2
  ;reset remaining main registers

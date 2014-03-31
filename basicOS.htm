@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\basicOS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\basicOS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 00:49:49 2014
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 13:21:01 2014
 <BR><P>
 <H3>Maximum Stack Usage =         40 bytes + Unknown(Functions without stacksize, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-PrintChar &rArr; __2printf
+Reset_Handler &rArr; PrintChar &rArr; __2printf
 <P>
 <H3>
 Functions with no stack information
@@ -69,13 +69,16 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
+<BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Create
+<LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
 </UL>
 
 <P><STRONG><a name="[8]"></a>PrintChar</STRONG> (Thumb, 30 bytes, Stack size 16 bytes, print.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = PrintChar &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+</UL>
+<BR>[Called By]<UL><LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Handler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
@@ -124,11 +127,12 @@ Global Symbols
 <P><STRONG><a name="[1b]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
 
 <P><STRONG><a name="[c]"></a>Reset_Handler</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32 + Unknown Stack Size
-<LI>Call Chain = Reset_Handler &rArr; PrintString &rArr; __2printf
+<BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
+<LI>Call Chain = Reset_Handler &rArr; PrintChar &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
 <LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
+<LI><a href="#[8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintChar
 </UL>
 
 <P><STRONG><a name="[1]"></a>SVC_Handler</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
@@ -164,6 +168,12 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
 <P><STRONG><a name="[a]"></a>SVC_Create</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
+<LI>Call Chain = SVC_Create &rArr; PrintDecimal &rArr; PrintCharNoReturn &rArr; __2printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintStringNoReturn
+<LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintDecimal
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
 <P><STRONG><a name="[7]"></a>PrintDecimal</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
@@ -173,7 +183,8 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
 <LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintCharNoReturn
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
+<BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Create
+<LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
