@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\basicOS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\basicOS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 13:21:01 2014
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 13:29:22 2014
 <BR><P>
 <H3>Maximum Stack Usage =         40 bytes + Unknown(Functions without stacksize, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -61,6 +61,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Handler
 <LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintDecimal
+<LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
@@ -163,6 +164,7 @@ Local Symbols
 <LI>Call Chain = SVC_Kill &rArr; PrintDecimal &rArr; PrintCharNoReturn &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintStringNoReturn
+<LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
 <LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintDecimal
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)

@@ -49,27 +49,26 @@ Start ; user code label for the start (optional)
  
  ;MOV r0, #0xFFFFFFFF
  ;SVC 2
- 
+ ;CreateProcessesInit
  LDR r1, =ProcessTable; initialise counter 
  ;LDR r2, =ProcessTable 
  LDR r3, =ProcessTableEnd
  
-MainLoopStart
+CreateProcesses
  
  ;LDR r0, [r2, r1, LSL #2]
  CMP r1, r3 ; compare the chosen address with the final address of the table
  ;BLGT Err_ProcessOutOfRange; if we're at an invalid process id, error out
- BGE MainLoopEnd ; if we're at the end of the table, finish 
+ BGE CreateProcessesEnd ; if we're at the end of the table, finish 
  LDR r0, [r1]
  SVC 5 
  ADD r1, r1, #4; increment counter
- B MainLoopStart
-MainLoopEnd
+ B CreateProcesses
+CreateProcessesEnd
  
- LDR r0, =osfinishing
- SVC 4
  
- B Stop
+ MOV r0, #0xFFFFFFFF
+ SVC 0
  
 SVC_Handler
  ;MOV r0, #0xbeef
@@ -104,6 +103,8 @@ SVC_Handler
 SVC_Kill
  MOV r1, #0xFFFFFFFF
  CMP r0, r1
+ LDREQ r0, =osfinishing
+ BLEQ PrintString
  BLEQ Stop
  pop{r0} ;pop lr from SVC_Handler
  pop{r1} ;pop id counter
@@ -156,7 +157,7 @@ SVC_Create
  push{lr}
  LDR r0, =svccreateprocess
  BL PrintStringNoReturn
- 
+
  MOV r0, r4
  BL PrintDecimal
  
