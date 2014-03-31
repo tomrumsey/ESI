@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\basicOS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\basicOS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 14:20:11 2014
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Mar 31 14:26:32 2014
 <BR><P>
 <H3>Maximum Stack Usage =         40 bytes + Unknown(Functions without stacksize, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -60,6 +60,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Handler
+<LI><a href="#[4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HelloGalaxy
 <LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintDecimal
 <LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SVC_Kill
 </UL>
@@ -197,6 +198,11 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
 <P><STRONG><a name="[4]"></a>HelloGalaxy</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, base.o(Printer))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32 + Unknown Stack Size
+<LI>Call Chain = HelloGalaxy &rArr; PrintString &rArr; __2printf
+</UL>
+<BR>[Calls]<UL><LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PrintString
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> base.o(Printer)
 </UL>
 <P><STRONG><a name="[12]"></a>SetSysClock</STRONG> (Thumb, 218 bytes, Stack size 12 bytes, system_stm32f4xx.o(.text))

@@ -47,7 +47,7 @@ Start ; user code label for the start (optional)
  
  ;MOV r0, #50012
  ;SVC 2
- 
+ ;SVC 6
  ;MOV r0, #0xFFFFFFFF
  ;SVC 2
  ;CreateProcessesInit
@@ -59,8 +59,9 @@ CreateProcesses
  
  ;LDR r0, [r2, r1, LSL #2]
  CMP r1, r3 ; compare the chosen address with the final address of the table
- ;BLGT Err_ProcessOutOfRange; if we're at an invalid process id, error out
+ 
  BGE CreateProcessesEnd ; if we're at the end of the table, finish 
+ BLGT Err_ProcessOutOfRange; if we're at an invalid process id, error out
  LDR r0, [r1]
  SVC 5 
  ADD r1, r1, #4; increment counter
@@ -89,7 +90,7 @@ SVC_Handler
  LDR r1, =SVCTableEnd
  CMP r0, r1 ; compare the chosen address with the final address of the table
  ;PUSH{r0}
- BLGT Err_SVCOutOfRange
+ BLGE Err_SVCOutOfRange
  MOV r1, r0
  MOV r0, r3
  BLX r1
@@ -299,14 +300,14 @@ HelloGalaxy
  
 Err_ProcessOutOfRange 
  LDR r0, =procoutofrangerr 
- SVC 4
+ BL PrintString
  BL Stop
  
 
  
 Err_SVCOutOfRange 
  LDR r0, =svcoutofrangerr 
- SVC 4
+ BL PrintString
  BL Stop
 
  ; ================ 
