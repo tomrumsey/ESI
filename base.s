@@ -31,7 +31,7 @@ Start ; user code label for the start (optional)
  MSR PSP, r1
  
  ;initialise baseId
- MOV r0, #0x0
+ MOV r0, #0xFFFFFFFF
  push{r0} ;push main id
  push{r1} ;push last main stack position
  push{r1} ;push last stack assignment

@@ -47,7 +47,7 @@ ARM Macro Assembler    Page 1
    31 00000006 F381 8809       MSR              PSP, r1
    32 0000000A         
    33 0000000A         ;initialise baseId
-   34 0000000A F04F 0000       MOV              r0, #0x0
+   34 0000000A F04F 30FF       MOV              r0, #0xFFFFFFFF
    35 0000000E B401            push{r0}                     ;push main id
    36 00000010 B402            push{r1}                     ;push last main sta
                                                             ck position
