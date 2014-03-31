@@ -34,6 +34,7 @@ Start ; user code label for the start (optional)
  MOV r0, #0x0
  push{r0} ;push main id
  push{r1} ;push last main stack position
+ push{r1} ;push last stack assignment
  push{r0} ;push lastid
  
  MOV r0, #0 ;dummy print
@@ -108,10 +109,13 @@ SVC_Kill
  BLEQ Stop
  pop{r0} ;pop lr from SVC_Handler
  pop{r1} ;pop id counter
+ pop{r4}
+ SUB r4, r4, #400
  pop{r2, r3}; pop data about current process, to throw away
  
  mov r3, r0
  pop{r9}; get current process stack pointer
+ push{r4}
  push{r1}; return id counter to stack
  push{r3} ;return lr
  ;we are now done with the main stack 
@@ -137,7 +141,7 @@ SVC_Kill
 SVC_Create
  ;get lr saved by previous
  pop{r3}
- ;get the id
+ ;get the id counter
  pop{r1}
  ADD r1, #1 ;r1 now contains my id 
  
@@ -145,6 +149,9 @@ SVC_Create
  MRS r2, PSP
  ;MOV r4, #0x5464
  STMFD r2!, {r11, r10, r9, r8, r7, r6, r5, r4} ;push all remaining registers to stack
+ 
+ ;get the stack list
+ pop{r8}
  
  ;r6 is saved, so we can reuse it
  MOV r6, r3
@@ -164,14 +171,15 @@ SVC_Create
  
  pop{lr}
  MOV r1, r4
- LDR r3, =0x20010000
  
- MOV r4, #400
- MUL r4, r4, r1
  
- ADD r2, r3, r4
+ ;MOV r4, #400
+ ADD r2, r8, #400
  
- push{r1, r2} ;add my id and initial sp (this value doesnt matter while I'm running) to MSP`
+ ;ADD r2, r3, r4
+ 
+ push{r1, r4} ;add my id and initial sp (this value doesnt matter while I'm running) to MSP`
+ push{r2}; update the last stack value
  push{r1} ;update the last id value
  push{r6} ;put the lr back
  ;we are now done with updating the main stack
