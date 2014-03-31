@@ -138,8 +138,6 @@ SVC_Create
  pop{r1}
  ADD r1, #1 ;r1 now contains my id 
  
- 
- 
  ;work on the process stack
  MRS r2, PSP
  ;MOV r4, #0x5464
