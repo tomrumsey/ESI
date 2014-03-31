@@ -49,6 +49,7 @@ Start ; user code label for the start (optional)
  ;SVC 2
  ;SVC 6
  ;MOV r0, #0xFFFFFFFF
+ ;MOV r0, #0
  ;SVC 2
  ;CreateProcessesInit
  LDR r1, =ProcessTable; initialise counter 
@@ -137,6 +138,7 @@ SVC_Kill
  LDMFD r0!, {r11, r10, r9, r8, r7, r6, r5, r4} ;restore other registers
  MSR PSP, r0; update PSP. there is no longer any way of recovering the old process directly 
  BX lr
+ LTORG
  
 ;create the process addressed by r0
 SVC_Create
@@ -259,7 +261,8 @@ DisplayEnd
  MOV lr, r6
  pop{r4, r6, r7, r8}
  BX lr
- 
+ LTORG
+  
 Switch ;put the address of the corresponding process into r0
  ;POP{r0}
  MOV r1, r0 ;move the id, so we can overwrite r0
@@ -328,7 +331,7 @@ ProcessTableEnd
 SVCTable
  DCD SVC_Kill
  DCD PrintHex
- DCD PrintDecimal ; fixme
+ DCD PrintDecimal
  DCD PrintChar
  DCD PrintString
  DCD SVC_Create
@@ -364,7 +367,6 @@ svcoutofrangerr
 	 
 svccreateprocess
  DCB "Creating process #",0  
- ALIGN 
 	 
 svckillprocess
  DCB "Killing process #",0  

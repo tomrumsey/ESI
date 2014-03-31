@@ -43,7 +43,7 @@ ARM Macro Assembler    Page 1
    27 00000004         ;main
    28 00000004         
    29 00000004         ;initialise process stack 
-   30 00000004 49B1            LDR              r1, =0x20010000
+   30 00000004 492F            LDR              r1, =0x20010000
    31 00000006 F381 8809       MSR              PSP, r1
    32 0000000A         
    33 0000000A         ;initialise baseId
@@ -58,7 +58,7 @@ ARM Macro Assembler    Page 1
    40 00000016 F04F 0000       MOV              r0, #0      ;dummy print
    41 0000001A F7FF FFFE       BL               PrintChar
    42 0000001E         
-   43 0000001E 48AC            LDR              r0, =osrunning
+   43 0000001E 482A            LDR              r0, =osrunning
    44 00000020 F7FF FFFE       BL               PrintString ;we're still in han
                                                             dler mode, so we're
                                                              allowed to directl
@@ -70,443 +70,460 @@ ARM Macro Assembler    Page 2
 
 
    45 00000024         
-   46 00000024 F000 F8BB       BL               Mode_Switch
+   46 00000024 F000 F8D0       BL               Mode_Switch
    47 00000028         
    48 00000028         ;MOV r0, #50012
    49 00000028         ;SVC 2
    50 00000028         ;SVC 6
    51 00000028         ;MOV r0, #0xFFFFFFFF
-   52 00000028         ;SVC 2
-   53 00000028         ;CreateProcessesInit
-   54 00000028 49AA            LDR              r1, =ProcessTable ; initialise 
+   52 00000028         ;MOV r0, #0
+   53 00000028         ;SVC 2
+   54 00000028         ;CreateProcessesInit
+   55 00000028 4928            LDR              r1, =ProcessTable ; initialise 
                                                             counter 
-   55 0000002A         ;LDR r2, =ProcessTable 
-   56 0000002A 4BAB            LDR              r3, =ProcessTableEnd
-   57 0000002C         
-   58 0000002C         CreateProcesses
-   59 0000002C         
-   60 0000002C         ;LDR r0, [r2, r1, LSL #2]
-   61 0000002C 4299            CMP              r1, r3      ; compare the chose
+   56 0000002A         ;LDR r2, =ProcessTable 
+   57 0000002A 4B29            LDR              r3, =ProcessTableEnd
+   58 0000002C         
+   59 0000002C         CreateProcesses
+   60 0000002C         
+   61 0000002C         ;LDR r0, [r2, r1, LSL #2]
+   62 0000002C 4299            CMP              r1, r3      ; compare the chose
                                                             n address with the 
                                                             final address of th
                                                             e table
-   62 0000002E         
-   63 0000002E DA07            BGE              CreateProcessesEnd ; if we're a
+   63 0000002E         
+   64 0000002E DA07            BGE              CreateProcessesEnd ; if we're a
                                                             t the end of the ta
                                                             ble, finish 
-   64 00000030 BFC8 F000 
-              F8CA             BLGT             Err_ProcessOutOfRange ; if we'r
+   65 00000030 BFC8 F000 
+              F8DF             BLGT             Err_ProcessOutOfRange ; if we'r
                                                             e at an invalid pro
                                                             cess id, error out
-   65 00000036 6808            LDR              r0, [r1]
-   66 00000038 DF05            SVC              5
-   67 0000003A F101 0104       ADD              r1, r1, #4  ; increment counter
+   66 00000036 6808            LDR              r0, [r1]
+   67 00000038 DF05            SVC              5
+   68 0000003A F101 0104       ADD              r1, r1, #4  ; increment counter
                                                             
-   68 0000003E E7F5            B                CreateProcesses
-   69 00000040         CreateProcessesEnd
-   70 00000040         
+   69 0000003E E7F5            B                CreateProcesses
+   70 00000040         CreateProcessesEnd
    71 00000040         
-   72 00000040 F04F 30FF       MOV              r0, #0xFFFFFFFF
-   73 00000044 DF00            SVC              0
-   74 00000046         
-   75 00000046         SVC_Handler
-   76 00000046         ;MOV r0, #0xbeef
-   77 00000046 B500            PUSH{lr}
-   78 00000048         ;BL PrintHex
-   79 00000048 4603            MOV              r3, r0
-   80 0000004A         ;get SVC operand
-   81 0000004A F01E 0F04       TST              lr, #4
-   82 0000004E BF0C            ITE              eq          ; check which mode 
+   72 00000040         
+   73 00000040 F04F 30FF       MOV              r0, #0xFFFFFFFF
+   74 00000044 DF00            SVC              0
+   75 00000046         
+   76 00000046         SVC_Handler
+   77 00000046         ;MOV r0, #0xbeef
+   78 00000046 B500            PUSH{lr}
+   79 00000048         ;BL PrintHex
+   80 00000048 4603            MOV              r3, r0
+   81 0000004A         ;get SVC operand
+   82 0000004A F01E 0F04       TST              lr, #4
+   83 0000004E BF0C            ITE              eq          ; check which mode 
                                                             we came from
-   83 00000050 F3EF 8008       MRSEQ            r0, MSP     ; load the relevant
+   84 00000050 F3EF 8008       MRSEQ            r0, MSP     ; load the relevant
                                                              stack pointer
-   84 00000054 F3EF 8009       MRSNE            r0, PSP
-   85 00000058 6981            LDR              r1, [r0, #24] ; stacked PC
-   86 0000005A F811 1C02       LDRB             r1, [r1, #-2] ; get SVC instruc
+   85 00000054 F3EF 8009       MRSNE            r0, PSP
+   86 00000058 6981            LDR              r1, [r0, #24] ; stacked PC
+   87 0000005A F811 1C02       LDRB             r1, [r1, #-2] ; get SVC instruc
                                                             tion’s operand
-   87 0000005E         
-   88 0000005E 4A9F            LDR              r2, =SVCTable
-   89 00000060 F852 0021       LDR              r0, [r2, r1, LSL #2]
-   90 00000064 499E            LDR              r1, =SVCTableEnd
+   88 0000005E         
+   89 0000005E 4A1D            LDR              r2, =SVCTable
+   90 00000060 F852 0021       LDR              r0, [r2, r1, LSL #2]
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-   91 00000066 4288            CMP              r0, r1      ; compare the chose
+   91 00000064 491C            LDR              r1, =SVCTableEnd
+   92 00000066 4288            CMP              r0, r1      ; compare the chose
                                                             n address with the 
                                                             final address of th
                                                             e table
-   92 00000068         ;PUSH{r0}
-   93 00000068 BFA8 F000 
-              F8B3             BLGE             Err_SVCOutOfRange
-   94 0000006E 4601            MOV              r1, r0
-   95 00000070 4618            MOV              r0, r3
-   96 00000072 4788            BLX              r1
-   97 00000074         
-   98 00000074 F85D EB04       POP{lr}
-   99 00000078         ;MOV r2, #4
-  100 00000078         ;POP{r0}
-  101 00000078         ;MOV r0, #42
-  102 00000078         ;PUSH{r0}
-  103 00000078 4770            BX               lr
-  104 0000007A         
-  105 0000007A         SVC_Kill
-  106 0000007A F04F 31FF       MOV              r1, #0xFFFFFFFF
-  107 0000007E 4288            CMP              r0, r1
-  108 00000080 BF04 4898       LDREQ            r0, =osfinishing
-  109 00000084 F7FF FFFE       BLEQ             PrintString
-  110 00000088 BF08 F000 
-              F8A8             BLEQ             Stop
-  111 0000008E BC01            pop{r0}                      ;pop lr from SVC_Ha
+   93 00000068         ;PUSH{r0}
+   94 00000068 BFA8 F000 
+              F8C8             BLGE             Err_SVCOutOfRange
+   95 0000006E 4601            MOV              r1, r0
+   96 00000070 4618            MOV              r0, r3
+   97 00000072 4788            BLX              r1
+   98 00000074         
+   99 00000074 F85D EB04       POP{lr}
+  100 00000078         ;MOV r2, #4
+  101 00000078         ;POP{r0}
+  102 00000078         ;MOV r0, #42
+  103 00000078         ;PUSH{r0}
+  104 00000078 4770            BX               lr
+  105 0000007A         
+  106 0000007A         SVC_Kill
+  107 0000007A F04F 31FF       MOV              r1, #0xFFFFFFFF
+  108 0000007E 4288            CMP              r0, r1
+  109 00000080 BF04 4816       LDREQ            r0, =osfinishing
+  110 00000084 F7FF FFFE       BLEQ             PrintString
+  111 00000088 BF08 F000 
+              F8BD             BLEQ             Stop
+  112 0000008E BC01            pop{r0}                      ;pop lr from SVC_Ha
                                                             ndler
-  112 00000090 BC02            pop{r1}                      ;pop id counter
-  113 00000092 BC10            pop{r4}
-  114 00000094 F5A4 74C8       SUB              r4, r4, #400
-  115 00000098 BC0C            pop{r2,          r3}         ; pop data about cu
+  113 00000090 BC02            pop{r1}                      ;pop id counter
+  114 00000092 BC10            pop{r4}
+  115 00000094 F5A4 74C8       SUB              r4, r4, #400
+  116 00000098 BC0C            pop{r2,          r3}         ; pop data about cu
                                                             rrent process, to t
                                                             hrow away
-  116 0000009A         
-  117 0000009A 4603            mov              r3, r0
-  118 0000009C F85D 9B04       pop{r9}                      ; get current proce
+  117 0000009A         
+  118 0000009A 4603            mov              r3, r0
+  119 0000009C F85D 9B04       pop{r9}                      ; get current proce
                                                             ss stack pointer
-  119 000000A0 B410            push{r4}
-  120 000000A2 B402            push{r1}                     ; return id counter
+  120 000000A0 B410            push{r4}
+  121 000000A2 B402            push{r1}                     ; return id counter
                                                              to stack
-  121 000000A4 B408            push{r3}                     ;return lr
-  122 000000A6         ;we are now done with the main stack 
-  123 000000A6         
+  122 000000A4 B408            push{r3}                     ;return lr
+  123 000000A6         ;we are now done with the main stack 
   124 000000A6         
-  125 000000A6 4676            MOV              r6, lr
-  126 000000A8 4614            MOV              r4, r2
-  127 000000AA         
-  128 000000AA 488F            LDR              r0, =svckillprocess
-  129 000000AC F7FF FFFE       BL               PrintStringNoReturn
-  130 000000B0 4620            MOV              r0, r4
-  131 000000B2 F000 F84B       BL               PrintDecimal
-  132 000000B6         ;normal recovery should now be in play
-  133 000000B6 46B6            MOV              lr, r6
-  134 000000B8         
-  135 000000B8         ;resume last process here
-  136 000000B8 4648            MOV              r0, r9
-  137 000000BA E8B0 0FF0       LDMFD            r0!, {r11, r10, r9, r8, r7, r6,
+  125 000000A6         
+  126 000000A6 4676            MOV              r6, lr
+  127 000000A8 4614            MOV              r4, r2
+  128 000000AA         
+  129 000000AA 480D            LDR              r0, =svckillprocess
+  130 000000AC F7FF FFFE       BL               PrintStringNoReturn
+  131 000000B0 4620            MOV              r0, r4
+  132 000000B2 F000 F85B       BL               PrintDecimal
+  133 000000B6         ;normal recovery should now be in play
+  134 000000B6 46B6            MOV              lr, r6
+  135 000000B8         
+  136 000000B8         ;resume last process here
+  137 000000B8 4648            MOV              r0, r9
+  138 000000BA E8B0 0FF0       LDMFD            r0!, {r11, r10, r9, r8, r7, r6,
  r5, r4} 
-                                                            ;restore other regi
 
 
 
 ARM Macro Assembler    Page 4 
 
 
+                                                            ;restore other regi
                                                             sters
-  138 000000BE F380 8809       MSR              PSP, r0     ; update PSP. there
+  139 000000BE F380 8809       MSR              PSP, r0     ; update PSP. there
                                                              is no longer any w
                                                             ay of recovering th
                                                             e old process direc
                                                             tly 
-  139 000000C2 4770            BX               lr
-  140 000000C4         
-  141 000000C4         ;create the process addressed by r0
-  142 000000C4         SVC_Create
-  143 000000C4         ;get lr saved by previous
-  144 000000C4 BC08            pop{r3}
-  145 000000C6         ;get the id counter
-  146 000000C6 BC02            pop{r1}
-  147 000000C8 F101 0101       ADD              r1, #1      ;r1 now contains my
+  140 000000C2 4770            BX               lr
+  141 000000C4 20010000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              00000000         LTORG
+  142 000000E4         
+  143 000000E4         ;create the process addressed by r0
+  144 000000E4         SVC_Create
+  145 000000E4         ;get lr saved by previous
+  146 000000E4 BC08            pop{r3}
+  147 000000E6         ;get the id counter
+  148 000000E6 BC02            pop{r1}
+  149 000000E8 F101 0101       ADD              r1, #1      ;r1 now contains my
                                                              id 
-  148 000000CC         
-  149 000000CC         ;work on the process stack
-  150 000000CC F3EF 8209       MRS              r2, PSP
-  151 000000D0         ;MOV r4, #0x5464
-  152 000000D0 E922 0FF0       STMFD            r2!, {r11, r10, r9, r8, r7, r6,
+  150 000000EC         
+  151 000000EC         ;work on the process stack
+  152 000000EC F3EF 8209       MRS              r2, PSP
+  153 000000F0         ;MOV r4, #0x5464
+  154 000000F0 E922 0FF0       STMFD            r2!, {r11, r10, r9, r8, r7, r6,
  r5, r4} 
                                                             ;push all remaining
                                                              registers to stack
                                                             
-  153 000000D4         
-  154 000000D4         ;get the stack list
-  155 000000D4 F85D 8B04       pop{r8}
-  156 000000D8         
-  157 000000D8         ;r6 is saved, so we can reuse it
-  158 000000D8 461E            MOV              r6, r3
-  159 000000DA         
-  160 000000DA F85D 9B04       pop{r9}                      ; dispose of the pr
+  155 000000F4         
+  156 000000F4         ;get the stack list
+  157 000000F4 F85D 8B04       pop{r8}
+  158 000000F8         
+  159 000000F8         ;r6 is saved, so we can reuse it
+  160 000000F8 461E            MOV              r6, r3
+  161 000000FA         
+  162 000000FA F85D 9B04       pop{r9}                      ; dispose of the pr
                                                             evious stackpointer
                                                              for the *current* 
                                                             process
-  161 000000DE         ;put the final sp in r2 
-  162 000000DE B404            push{r2}                     ;update it 
-  163 000000E0         
-  164 000000E0 460C            MOV              r4, r1
-  165 000000E2 4605            MOV              r5, r0      ;put new pc in r5
-  166 000000E4 B500            push{lr}
-  167 000000E6 4881            LDR              r0, =svccreateprocess
-  168 000000E8 F7FF FFFE       BL               PrintStringNoReturn
-  169 000000EC         
-  170 000000EC 4620            MOV              r0, r4
-  171 000000EE F000 F82D       BL               PrintDecimal
-  172 000000F2         
-  173 000000F2 F85D EB04       pop{lr}
-  174 000000F6 4621            MOV              r1, r4
-  175 000000F8         
-  176 000000F8         
-  177 000000F8         ;MOV r4, #400
-  178 000000F8 F508 72C8       ADD              r2, r8, #400
-  179 000000FC         
-  180 000000FC         ;ADD r2, r3, r4
-  181 000000FC         
-  182 000000FC B412            push{r1,         r4}         ;add my id and init
-                                                            ial sp (this value 
+  163 000000FE         ;put the final sp in r2 
+  164 000000FE B404            push{r2}                     ;update it 
+  165 00000100         
+  166 00000100 460C            MOV              r4, r1
+  167 00000102 4605            MOV              r5, r0      ;put new pc in r5
+  168 00000104 B500            push{lr}
+  169 00000106 4829            LDR              r0, =svccreateprocess
+  170 00000108 F7FF FFFE       BL               PrintStringNoReturn
+  171 0000010C         
+  172 0000010C 4620            MOV              r0, r4
+  173 0000010E F000 F82D       BL               PrintDecimal
+  174 00000112         
+  175 00000112 F85D EB04       pop{lr}
+  176 00000116 4621            MOV              r1, r4
 
 
 
 ARM Macro Assembler    Page 5 
 
 
+  177 00000118         
+  178 00000118         
+  179 00000118         ;MOV r4, #400
+  180 00000118 F508 72C8       ADD              r2, r8, #400
+  181 0000011C         
+  182 0000011C         ;ADD r2, r3, r4
+  183 0000011C         
+  184 0000011C B412            push{r1,         r4}         ;add my id and init
+                                                            ial sp (this value 
                                                             doesnt matter while
                                                              I'm running) to MS
                                                             P`
-  183 000000FE B404            push{r2}                     ; update the last s
+  185 0000011E B404            push{r2}                     ; update the last s
                                                             tack value
-  184 00000100 B402            push{r1}                     ;update the last id
+  186 00000120 B402            push{r1}                     ;update the last id
                                                              value
-  185 00000102 B440            push{r6}                     ;put the lr back
-  186 00000104         ;we are now done with updating the main stack
-  187 00000104         
-  188 00000104         ;work on the process stack
-  189 00000104         
-  190 00000104         ;at this point, 
-  191 00000104         ;0xFFFFFFFF default LR
-  192 00000104         ;0x01000000 default xPSR
-  193 00000104 F04F 7680       MOV              r6, #0x01000000 ; put default x
+  187 00000122 B440            push{r6}                     ;put the lr back
+  188 00000124         ;we are now done with updating the main stack
+  189 00000124         
+  190 00000124         ;work on the process stack
+  191 00000124         
+  192 00000124         ;at this point, 
+  193 00000124         ;0xFFFFFFFF default LR
+  194 00000124         ;0x01000000 default xPSR
+  195 00000124 F04F 7680       MOV              r6, #0x01000000 ; put default x
                                                             PSR value in r0 
-  194 00000108         ;put new pc in r5 (see above)
-  195 00000108 F04F 34FF       MOV              r4, #0xFFFFFFFF ; put default L
+  196 00000128         ;put new pc in r5 (see above)
+  197 00000128 F04F 34FF       MOV              r4, #0xFFFFFFFF ; put default L
                                                             R value in r0
-  196 0000010C 4617            MOV              r7, r2
-  197 0000010E         ;reset remaining main registers
-  198 0000010E F04F 0000       MOV              r0, #0
-  199 00000112 F04F 0100       MOV              r1, #0
-  200 00000116 F04F 0200       MOV              r2, #0
-  201 0000011A F04F 0300       MOV              r3, #0
-  202 0000011E         
-  203 0000011E         
-  204 0000011E E927 0070       STMFD            r7!, {r6, r5, r4}
-  205 00000122         ; STMFD r7!, {r12, r6, r5, r4}
-  206 00000122 E927 100F       STMFD            r7!, {r12, r3, r2, r1, r0}
-  207 00000126         ; STMFD r7!, {r0, r1, r2}
-  208 00000126 F387 8809       MSR              PSP, r7     ;update the stack p
+  198 0000012C 4617            MOV              r7, r2
+  199 0000012E         ;reset remaining main registers
+  200 0000012E F04F 0000       MOV              r0, #0
+  201 00000132 F04F 0100       MOV              r1, #0
+  202 00000136 F04F 0200       MOV              r2, #0
+  203 0000013A F04F 0300       MOV              r3, #0
+  204 0000013E         
+  205 0000013E         
+  206 0000013E E927 0070       STMFD            r7!, {r6, r5, r4}
+  207 00000142         ; STMFD r7!, {r12, r6, r5, r4}
+  208 00000142 E927 100F       STMFD            r7!, {r12, r3, r2, r1, r0}
+  209 00000146         ; STMFD r7!, {r0, r1, r2}
+  210 00000146 F387 8809       MSR              PSP, r7     ;update the stack p
                                                             ointer
-  209 0000012A         
-  210 0000012A         ;reset all registers that won't be overwritten
-  211 0000012A F04F 0400       MOV              r4, #0
-  212 0000012E F04F 0500       MOV              r5, #0
-  213 00000132 F04F 0600       MOV              r6, #0
-  214 00000136 F04F 0700       MOV              r7, #0
-  215 0000013A F04F 0800       MOV              r8, #0
-  216 0000013E F04F 0900       MOV              r9, #0
-  217 00000142 F04F 0A00       MOV              r10, #0
-  218 00000146 F04F 0B00       MOV              r11, #0
-  219 0000014A         
-  220 0000014A         ;return to our newly created process, via the SVC_Handle
+  211 0000014A         
+  212 0000014A         ;reset all registers that won't be overwritten
+  213 0000014A F04F 0400       MOV              r4, #0
+  214 0000014E F04F 0500       MOV              r5, #0
+  215 00000152 F04F 0600       MOV              r6, #0
+  216 00000156 F04F 0700       MOV              r7, #0
+  217 0000015A F04F 0800       MOV              r8, #0
+  218 0000015E F04F 0900       MOV              r9, #0
+  219 00000162 F04F 0A00       MOV              r10, #0
+  220 00000166 F04F 0B00       MOV              r11, #0
+  221 0000016A         
+  222 0000016A         ;return to our newly created process, via the SVC_Handle
                        r
-  221 0000014A 4770            BX               lr
-  222 0000014C         
-  223 0000014C         
-  224 0000014C         PrintDecimal
-  225 0000014C E92D 01D0       push{r4,         r6, r7, r8}
-  226 00000150 F04F 020A       MOV              r2, #10
-  227 00000154         
-  228 00000154 466F            MOV              r7, sp      ;store original add
-                                                            ress
-  229 00000156         
-  230 00000156         DecomposeStart
-  231 00000156         
+  223 0000016A 4770            BX               lr
+  224 0000016C         
+  225 0000016C         
 
 
 
 ARM Macro Assembler    Page 6 
 
 
-  232 00000156         ;establish last deciaml digit
-  233 00000156 FBB0 F8F2       UDIV             r8, r0, r2
-  234 0000015A FB08 F402       MUL              r4, r8, r2  ;get r0-r0%10
-  235 0000015E         ;subtract from origin number to get r0%10
-  236 0000015E EBA0 0004       SUB              r0, r0, r4
-  237 00000162         ;push it
-  238 00000162 B401            push{r0}
-  239 00000164         ;update r0 as r0/10
-  240 00000164 4640            MOV              r0, r8      ;
-  241 00000166         
-  242 00000166         ;if r0 = 0, we are done
-  243 00000166 2800            CMP              r0, #0
-  244 00000168 D1F5            BNE              DecomposeStart
-  245 0000016A         
-  246 0000016A         DecomposeEnd
-  247 0000016A 4676            MOV              r6, lr
-  248 0000016C         ;Note: we are guaranteed the above pushed at least once.
+  226 0000016C         PrintDecimal
+  227 0000016C E92D 01D0       push{r4,         r6, r7, r8}
+  228 00000170 F04F 020A       MOV              r2, #10
+  229 00000174         
+  230 00000174 466F            MOV              r7, sp      ;store original add
+                                                            ress
+  231 00000176         
+  232 00000176         DecomposeStart
+  233 00000176         
+  234 00000176         ;establish last deciaml digit
+  235 00000176 FBB0 F8F2       UDIV             r8, r0, r2
+  236 0000017A FB08 F402       MUL              r4, r8, r2  ;get r0-r0%10
+  237 0000017E         ;subtract from origin number to get r0%10
+  238 0000017E EBA0 0004       SUB              r0, r0, r4
+  239 00000182         ;push it
+  240 00000182 B401            push{r0}
+  241 00000184         ;update r0 as r0/10
+  242 00000184 4640            MOV              r0, r8      ;
+  243 00000186         
+  244 00000186         ;if r0 = 0, we are done
+  245 00000186 2800            CMP              r0, #0
+  246 00000188 D1F5            BNE              DecomposeStart
+  247 0000018A         
+  248 0000018A         DecomposeEnd
+  249 0000018A 4676            MOV              r6, lr
+  250 0000018C         ;Note: we are guaranteed the above pushed at least once.
                         This is convenient
-  249 0000016C         DisplayStart
-  250 0000016C BC01            pop{r0}
-  251 0000016E F100 0030       ADD              r0, r0, #48
-  252 00000172 F7FF FFFE       BL               PrintCharNoReturn ; TODO: updat
+  251 0000018C         DisplayStart
+  252 0000018C BC01            pop{r0}
+  253 0000018E F100 0030       ADD              r0, r0, #48
+  254 00000192 F7FF FFFE       BL               PrintCharNoReturn ; TODO: updat
                                                             e with correct func
                                                             tion. Digits themse
                                                             lves are correct
-  253 00000176 46E8            MOV              r8, sp
-  254 00000178 4547            CMP              r7, r8
-  255 0000017A D1F7            BNE              DisplayStart
-  256 0000017C         DisplayEnd
-  257 0000017C 485C            LDR              r0, =newline
-  258 0000017E F7FF FFFE       BL               PrintString
-  259 00000182 46B6            MOV              lr, r6
-  260 00000184 E8BD 01D0       pop{r4,          r6, r7, r8}
-  261 00000188 4770            BX               lr
-  262 0000018A         
-  263 0000018A         Switch                               ;put the address of
+  255 00000196 46E8            MOV              r8, sp
+  256 00000198 4547            CMP              r7, r8
+  257 0000019A D1F7            BNE              DisplayStart
+  258 0000019C         DisplayEnd
+  259 0000019C 4804            LDR              r0, =newline
+  260 0000019E F7FF FFFE       BL               PrintString
+  261 000001A2 46B6            MOV              lr, r6
+  262 000001A4 E8BD 01D0       pop{r4,          r6, r7, r8}
+  263 000001A8 4770            BX               lr
+  264 000001AA 00 00 00000000 
+              00000000         LTORG
+  265 000001B4         
+  266 000001B4         Switch                               ;put the address of
                                                              the corresponding 
                                                             process into r0
-  264 0000018A         ;POP{r0}
-  265 0000018A 4601            MOV              r1, r0      ;move the id, so we
+  267 000001B4         ;POP{r0}
+  268 000001B4 4601            MOV              r1, r0      ;move the id, so we
                                                              can overwrite r0
-  266 0000018C 4A51            LDR              r2, =ProcessTable
-  267 0000018E F852 0021       LDR              r0, [r2, r1, LSL #2]
-  268 00000192 4951            LDR              r1, =ProcessTableEnd
-  269 00000194 4288            CMP              r0, r1      ; compare the chose
+  269 000001B6 4A4F            LDR              r2, =ProcessTable
+  270 000001B8 F852 0021       LDR              r0, [r2, r1, LSL #2]
+  271 000001BC 494E            LDR              r1, =ProcessTableEnd
+  272 000001BE 4288            CMP              r0, r1      ; compare the chose
                                                             n address with the 
                                                             final address of th
                                                             e table
-  270 00000196         ;PUSH{r0}
-  271 00000196 BFC8 F000 
-              F817             BLGT             Err_ProcessOutOfRange
-  272 0000019C 4770            BX               lr
-  273 0000019E         
-  274 0000019E         Mode_Switch
-  275 0000019E F04F 0002       MOV              r0, #0x2    ; set stack to PSP 
-                                                            
-  276 000001A2 F380 8814       MSR              CONTROL, r0 ; do it 
-  277 000001A6 F3BF 8F6F       ISB                          ; wait for it to be
-                                                             done 
 
 
 
 ARM Macro Assembler    Page 7 
 
 
-  278 000001AA         
-  279 000001AA F04F 0003       MOV              r0, #0x03   ; set privilege lev
+  273 000001C0         ;PUSH{r0}
+  274 000001C0 BFC8 F000 
+              F817             BLGT             Err_ProcessOutOfRange
+  275 000001C6 4770            BX               lr
+  276 000001C8         
+  277 000001C8         Mode_Switch
+  278 000001C8 F04F 0002       MOV              r0, #0x2    ; set stack to PSP 
+                                                            
+  279 000001CC F380 8814       MSR              CONTROL, r0 ; do it 
+  280 000001D0 F3BF 8F6F       ISB                          ; wait for it to be
+                                                             done 
+  281 000001D4         
+  282 000001D4 F04F 0003       MOV              r0, #0x03   ; set privilege lev
                                                             el to User. 
-  280 000001AE         ; N.B. Cannot combine this to single MSR instruction wit
+  283 000001D8         ; N.B. Cannot combine this to single MSR instruction wit
                        h 
-  281 000001AE         ; above PSP change when using RVDS ISSM!! 
-  282 000001AE F380 8814       MSR              CONTROL, r0
-  283 000001B2 F3BF 8F6F       ISB
-  284 000001B6 4770            BX               lr
-  285 000001B8         
-  286 000001B8         HelloWorld
-  287 000001B8 484E            LDR              r0, =helloworld
-  288 000001BA DF04            SVC              4
-  289 000001BC DF00            SVC              0
-  290 000001BE         
-  291 000001BE         HelloMars
-  292 000001BE 484E            LDR              r0, =hellomars
-  293 000001C0 DF04            SVC              4
-  294 000001C2 DF00            SVC              0
-  295 000001C4         
-  296 000001C4         HelloGalaxy
-  297 000001C4 484D            LDR              r0, =hellogalaxy
-  298 000001C6 DF04            SVC              4
-  299 000001C8 DF00            SVC              0
-  300 000001CA         
-  301 000001CA         Err_ProcessOutOfRange
-  302 000001CA 484D            LDR              r0, =procoutofrangerr
-  303 000001CC F7FF FFFE       BL               PrintString
-  304 000001D0 F000 F805       BL               Stop
-  305 000001D4         
-  306 000001D4         
-  307 000001D4         
-  308 000001D4         Err_SVCOutOfRange
-  309 000001D4 484B            LDR              r0, =svcoutofrangerr
-  310 000001D6 F7FF FFFE       BL               PrintString
-  311 000001DA F000 F800       BL               Stop
-  312 000001DE         
-  313 000001DE         ; ================ 
-  314 000001DE         ; End your program 
-  315 000001DE         ; ================ 
-  316 000001DE         Stop
-  317 000001DE E7FE            B                Stop
-  318 000001E0         
-  319 000001E0         ; Declare some strings to be printed out 
-  320 000001E0         ; These are constants and represent the data area 
-  321 000001E0                 ALIGN
-  322 000001E0         ProcessTable
-  323 000001E0 00000000        DCD              HelloWorld
-  324 000001E4 00000000        DCD              HelloMars
-  325 000001E8 00000000        DCD              HelloGalaxy
-  326 000001EC         ProcessTableEnd
-  327 000001EC         
-  328 000001EC         SVCTable
-  329 000001EC 00000000        DCD              SVC_Kill
-  330 000001F0 00000000        DCD              PrintHex
-  331 000001F4 00000000        DCD              PrintDecimal ; fixme
-  332 000001F8 00000000        DCD              PrintChar
-  333 000001FC 00000000        DCD              PrintString
-  334 00000200 00000000        DCD              SVC_Create
+  284 000001D8         ; above PSP change when using RVDS ISSM!! 
+  285 000001D8 F380 8814       MSR              CONTROL, r0
+  286 000001DC F3BF 8F6F       ISB
+  287 000001E0 4770            BX               lr
+  288 000001E2         
+  289 000001E2         HelloWorld
+  290 000001E2 4846            LDR              r0, =helloworld
+  291 000001E4 DF04            SVC              4
+  292 000001E6 DF00            SVC              0
+  293 000001E8         
+  294 000001E8         HelloMars
+  295 000001E8 4845            LDR              r0, =hellomars
+  296 000001EA DF04            SVC              4
+  297 000001EC DF00            SVC              0
+  298 000001EE         
+  299 000001EE         HelloGalaxy
+  300 000001EE 4845            LDR              r0, =hellogalaxy
+  301 000001F0 DF04            SVC              4
+  302 000001F2 DF00            SVC              0
+  303 000001F4         
+  304 000001F4         Err_ProcessOutOfRange
+  305 000001F4 4844            LDR              r0, =procoutofrangerr
+  306 000001F6 F7FF FFFE       BL               PrintString
+  307 000001FA F000 F805       BL               Stop
+  308 000001FE         
+  309 000001FE         
+  310 000001FE         
+  311 000001FE         Err_SVCOutOfRange
+  312 000001FE 4843            LDR              r0, =svcoutofrangerr
+  313 00000200 F7FF FFFE       BL               PrintString
+  314 00000204 F000 F800       BL               Stop
+  315 00000208         
+  316 00000208         ; ================ 
+  317 00000208         ; End your program 
+  318 00000208         ; ================ 
+  319 00000208         Stop
+  320 00000208 E7FE            B                Stop
+  321 0000020A         
+  322 0000020A         ; Declare some strings to be printed out 
+  323 0000020A         ; These are constants and represent the data area 
+  324 0000020A 00 00           ALIGN
+  325 0000020C         ProcessTable
+  326 0000020C 00000000        DCD              HelloWorld
 
 
 
 ARM Macro Assembler    Page 8 
 
 
-  335 00000204         SVCTableEnd
-  336 00000204         
-  337 00000204         youlike
-  338 00000204 59 6F 75 
+  327 00000210 00000000        DCD              HelloMars
+  328 00000214 00000000        DCD              HelloGalaxy
+  329 00000218         ProcessTableEnd
+  330 00000218         
+  331 00000218         SVCTable
+  332 00000218 00000000        DCD              SVC_Kill
+  333 0000021C 00000000        DCD              PrintHex
+  334 00000220 00000000        DCD              PrintDecimal
+  335 00000224 00000000        DCD              PrintChar
+  336 00000228 00000000        DCD              PrintString
+  337 0000022C 00000000        DCD              SVC_Create
+  338 00000230         SVCTableEnd
+  339 00000230         
+  340 00000230         youlike
+  341 00000230 59 6F 75 
               20 6C 69 
               6B 65 3A 
               20 00            DCB              "You like: ",0
-  339 0000020F         
-  340 0000020F         osrunning
-  341 0000020F 4F 53 20 
+  342 0000023B         
+  343 0000023B         osrunning
+  344 0000023B 4F 53 20 
               72 75 6E 
               6E 69 6E 
               67 00            DCB              "OS running",0
-  342 0000021A         
-  343 0000021A         osfinishing
-  344 0000021A 47 6F 6F 
+  345 00000246         
+  346 00000246         osfinishing
+  347 00000246 47 6F 6F 
               64 62 79 
               65 21 00         DCB              "Goodbye!",0
-  345 00000223         
-  346 00000223         helloworld
-  347 00000223 48 65 6C 
+  348 0000024F         
+  349 0000024F         helloworld
+  350 0000024F 48 65 6C 
               6C 6F 2C 
               20 77 6F 
               72 6C 64 
               21 00            DCB              "Hello, world!",0
-  348 00000231         
-  349 00000231         newline
-  350 00000231 00              DCB              "",0
-  351 00000232         
-  352 00000232         hellomars
-  353 00000232 48 65 6C 
+  351 0000025D         
+  352 0000025D         newline
+  353 0000025D 00              DCB              "",0
+  354 0000025E         
+  355 0000025E         hellomars
+  356 0000025E 48 65 6C 
               6C 6F 2C 
               20 6D 61 
               72 73 21 
               00               DCB              "Hello, mars!",0
-  354 0000023F         
-  355 0000023F         hellogalaxy
-  356 0000023F 48 65 6C 
+  357 0000026B         
+  358 0000026B         hellogalaxy
+  359 0000026B 48 65 6C 
               6C 6F 2C 
               20 67 61 
               6C 61 78 
               79 21 00         DCB              "Hello, galaxy!",0
-  357 0000024E         
-  358 0000024E         procoutofrangerr
-  359 0000024E 45 72 72 
+  360 0000027A         
+  361 0000027A         procoutofrangerr
+  362 0000027A 45 72 72 
               6F 72 3A 
               20 72 65 
               71 75 65 
+
+
+
+ARM Macro Assembler    Page 9 
+
+
               73 74 65 
               64 20 70 
               72 6F 63 
@@ -518,16 +535,10 @@ ARM Macro Assembler    Page 8
               66 20 72 
               61 6E 67 
               65 00            DCB              "Error: requested process id is
-
-
-
-ARM Macro Assembler    Page 9 
-
-
  out of range",0
-  360 0000027A         
-  361 0000027A         svcoutofrangerr
-  362 0000027A 45 72 72 
+  363 000002A6         
+  364 000002A6         svcoutofrangerr
+  365 000002A6 45 72 72 
               6F 72 3A 
               20 72 65 
               71 75 65 
@@ -542,39 +553,28 @@ ARM Macro Assembler    Page 9
               6E 67 65 
               00               DCB              "Error: requested SVC id is out
  of range",0
-  363 000002A2         
-  364 000002A2         
-  365 000002A2         svccreateprocess
-  366 000002A2 43 72 65 
+  366 000002CE         
+  367 000002CE         
+  368 000002CE         svccreateprocess
+  369 000002CE 43 72 65 
               61 74 69 
               6E 67 20 
               70 72 6F 
               63 65 73 
               73 20 23 
               00               DCB              "Creating process #",0
-  367 000002B5 00 00 00        ALIGN
-  368 000002B8         
-  369 000002B8         svckillprocess
-  370 000002B8 4B 69 6C 
+  370 000002E1         
+  371 000002E1         svckillprocess
+  372 000002E1 4B 69 6C 
               6C 69 6E 
               67 20 70 
               72 6F 63 
               65 73 73 
               20 23 00         DCB              "Killing process #",0
-  371 000002CA 00 00           ALIGN
-  372 000002CC         
-  373 000002CC         
-  374 000002CC                 END
-              20010000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
+  373 000002F3 00              ALIGN
+  374 000002F4         
+  375 000002F4         
+  376 000002F4                 END
               00000000 
               00000000 
               00000000 
@@ -602,49 +602,49 @@ CreateProcesses 0000002C
 
 Symbol: CreateProcesses
    Definitions
-      At line 58 in file base.s
+      At line 59 in file base.s
    Uses
-      At line 68 in file base.s
+      At line 69 in file base.s
 Comment: CreateProcesses used once
 CreateProcessesEnd 00000040
 
 Symbol: CreateProcessesEnd
    Definitions
-      At line 69 in file base.s
+      At line 70 in file base.s
    Uses
-      At line 63 in file base.s
+      At line 64 in file base.s
 Comment: CreateProcessesEnd used once
-DecomposeEnd 0000016A
+DecomposeEnd 0000018A
 
 Symbol: DecomposeEnd
    Definitions
-      At line 246 in file base.s
+      At line 248 in file base.s
    Uses
       None
 Comment: DecomposeEnd unused
-DecomposeStart 00000156
+DecomposeStart 00000176
 
 Symbol: DecomposeStart
    Definitions
-      At line 230 in file base.s
+      At line 232 in file base.s
    Uses
-      At line 244 in file base.s
+      At line 246 in file base.s
 Comment: DecomposeStart used once
-DisplayEnd 0000017C
+DisplayEnd 0000019C
 
 Symbol: DisplayEnd
    Definitions
-      At line 256 in file base.s
+      At line 258 in file base.s
    Uses
       None
 Comment: DisplayEnd unused
-DisplayStart 0000016C
+DisplayStart 0000018C
 
 Symbol: DisplayStart
    Definitions
-      At line 249 in file base.s
+      At line 251 in file base.s
    Uses
-      At line 255 in file base.s
+      At line 257 in file base.s
 Comment: DisplayStart used once
 ENTRY 00000000
 
@@ -654,7 +654,7 @@ Symbol: ENTRY
    Uses
       None
 Comment: ENTRY unused
-Err_ProcessOutOfRange 000001CA
+Err_ProcessOutOfRange 000001F4
 
 Symbol: Err_ProcessOutOfRange
 
@@ -664,60 +664,60 @@ ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 Relocatable symbols
 
    Definitions
-      At line 301 in file base.s
+      At line 304 in file base.s
    Uses
-      At line 64 in file base.s
-      At line 271 in file base.s
+      At line 65 in file base.s
+      At line 274 in file base.s
 
-Err_SVCOutOfRange 000001D4
+Err_SVCOutOfRange 000001FE
 
 Symbol: Err_SVCOutOfRange
    Definitions
-      At line 308 in file base.s
+      At line 311 in file base.s
    Uses
-      At line 93 in file base.s
+      At line 94 in file base.s
 Comment: Err_SVCOutOfRange used once
-HelloGalaxy 000001C4
+HelloGalaxy 000001EE
 
 Symbol: HelloGalaxy
    Definitions
-      At line 296 in file base.s
+      At line 299 in file base.s
    Uses
-      At line 325 in file base.s
+      At line 328 in file base.s
 Comment: HelloGalaxy used once
-HelloMars 000001BE
+HelloMars 000001E8
 
 Symbol: HelloMars
    Definitions
-      At line 291 in file base.s
+      At line 294 in file base.s
    Uses
-      At line 324 in file base.s
+      At line 327 in file base.s
 Comment: HelloMars used once
-HelloWorld 000001B8
+HelloWorld 000001E2
 
 Symbol: HelloWorld
    Definitions
-      At line 286 in file base.s
+      At line 289 in file base.s
    Uses
-      At line 323 in file base.s
+      At line 326 in file base.s
 Comment: HelloWorld used once
-Mode_Switch 0000019E
+Mode_Switch 000001C8
 
 Symbol: Mode_Switch
    Definitions
-      At line 274 in file base.s
+      At line 277 in file base.s
    Uses
       At line 46 in file base.s
 Comment: Mode_Switch used once
-PrintDecimal 0000014C
+PrintDecimal 0000016C
 
 Symbol: PrintDecimal
    Definitions
-      At line 224 in file base.s
+      At line 226 in file base.s
    Uses
-      At line 131 in file base.s
-      At line 171 in file base.s
-      At line 331 in file base.s
+      At line 132 in file base.s
+      At line 173 in file base.s
+      At line 334 in file base.s
 
 Printer 00000000
 
@@ -733,23 +733,23 @@ Relocatable symbols
    Uses
       None
 Comment: Printer unused
-ProcessTable 000001E0
+ProcessTable 0000020C
 
 Symbol: ProcessTable
    Definitions
-      At line 322 in file base.s
+      At line 325 in file base.s
    Uses
-      At line 54 in file base.s
-      At line 266 in file base.s
+      At line 55 in file base.s
+      At line 269 in file base.s
 
-ProcessTableEnd 000001EC
+ProcessTableEnd 00000218
 
 Symbol: ProcessTableEnd
    Definitions
-      At line 326 in file base.s
+      At line 329 in file base.s
    Uses
-      At line 56 in file base.s
-      At line 268 in file base.s
+      At line 57 in file base.s
+      At line 271 in file base.s
 
 Reset_Handler 00000000
 
@@ -759,29 +759,29 @@ Symbol: Reset_Handler
    Uses
       At line 17 in file base.s
 Comment: Reset_Handler used once
-SVCTable 000001EC
+SVCTable 00000218
 
 Symbol: SVCTable
    Definitions
-      At line 328 in file base.s
+      At line 331 in file base.s
    Uses
-      At line 88 in file base.s
+      At line 89 in file base.s
 Comment: SVCTable used once
-SVCTableEnd 00000204
+SVCTableEnd 00000230
 
 Symbol: SVCTableEnd
    Definitions
-      At line 335 in file base.s
+      At line 338 in file base.s
    Uses
-      At line 90 in file base.s
+      At line 91 in file base.s
 Comment: SVCTableEnd used once
-SVC_Create 000000C4
+SVC_Create 000000E4
 
 Symbol: SVC_Create
    Definitions
-      At line 142 in file base.s
+      At line 144 in file base.s
    Uses
-      At line 334 in file base.s
+      At line 337 in file base.s
 Comment: SVC_Create used once
 SVC_Handler 00000046
 
@@ -793,7 +793,7 @@ Symbol: SVC_Handler
 ARM Macro Assembler    Page 4 Alphabetic symbol ordering
 Relocatable symbols
 
-      At line 75 in file base.s
+      At line 76 in file base.s
    Uses
       At line 18 in file base.s
 Comment: SVC_Handler used once
@@ -801,9 +801,9 @@ SVC_Kill 0000007A
 
 Symbol: SVC_Kill
    Definitions
-      At line 105 in file base.s
+      At line 106 in file base.s
    Uses
-      At line 329 in file base.s
+      At line 332 in file base.s
 Comment: SVC_Kill used once
 Start 00000004
 
@@ -813,42 +813,42 @@ Symbol: Start
    Uses
       None
 Comment: Start unused
-Stop 000001DE
+Stop 00000208
 
 Symbol: Stop
    Definitions
-      At line 316 in file base.s
+      At line 319 in file base.s
    Uses
-      At line 110 in file base.s
-      At line 304 in file base.s
-      At line 311 in file base.s
-      At line 317 in file base.s
+      At line 111 in file base.s
+      At line 307 in file base.s
+      At line 314 in file base.s
+      At line 320 in file base.s
 
-Switch 0000018A
+Switch 000001B4
 
 Symbol: Switch
    Definitions
-      At line 263 in file base.s
+      At line 266 in file base.s
    Uses
       None
 Comment: Switch unused
-hellogalaxy 0000023F
+hellogalaxy 0000026B
 
 Symbol: hellogalaxy
    Definitions
-      At line 355 in file base.s
+      At line 358 in file base.s
    Uses
-      At line 297 in file base.s
+      At line 300 in file base.s
 Comment: hellogalaxy used once
-hellomars 00000232
+hellomars 0000025E
 
 Symbol: hellomars
    Definitions
-      At line 352 in file base.s
+      At line 355 in file base.s
    Uses
-      At line 292 in file base.s
+      At line 295 in file base.s
 Comment: hellomars used once
-helloworld 00000223
+helloworld 0000024F
 
 Symbol: helloworld
    Definitions
@@ -858,65 +858,65 @@ Symbol: helloworld
 ARM Macro Assembler    Page 5 Alphabetic symbol ordering
 Relocatable symbols
 
-      At line 346 in file base.s
+      At line 349 in file base.s
    Uses
-      At line 287 in file base.s
+      At line 290 in file base.s
 Comment: helloworld used once
-newline 00000231
+newline 0000025D
 
 Symbol: newline
    Definitions
-      At line 349 in file base.s
+      At line 352 in file base.s
    Uses
-      At line 257 in file base.s
+      At line 259 in file base.s
 Comment: newline used once
-osfinishing 0000021A
+osfinishing 00000246
 
 Symbol: osfinishing
    Definitions
-      At line 343 in file base.s
+      At line 346 in file base.s
    Uses
-      At line 108 in file base.s
+      At line 109 in file base.s
 Comment: osfinishing used once
-osrunning 0000020F
+osrunning 0000023B
 
 Symbol: osrunning
    Definitions
-      At line 340 in file base.s
+      At line 343 in file base.s
    Uses
       At line 43 in file base.s
 Comment: osrunning used once
-procoutofrangerr 0000024E
+procoutofrangerr 0000027A
 
 Symbol: procoutofrangerr
    Definitions
-      At line 358 in file base.s
+      At line 361 in file base.s
    Uses
-      At line 302 in file base.s
+      At line 305 in file base.s
 Comment: procoutofrangerr used once
-svccreateprocess 000002A2
+svccreateprocess 000002CE
 
 Symbol: svccreateprocess
    Definitions
-      At line 365 in file base.s
+      At line 368 in file base.s
    Uses
-      At line 167 in file base.s
+      At line 169 in file base.s
 Comment: svccreateprocess used once
-svckillprocess 000002B8
+svckillprocess 000002E1
 
 Symbol: svckillprocess
    Definitions
-      At line 369 in file base.s
+      At line 371 in file base.s
    Uses
-      At line 128 in file base.s
+      At line 129 in file base.s
 Comment: svckillprocess used once
-svcoutofrangerr 0000027A
+svcoutofrangerr 000002A6
 
 Symbol: svcoutofrangerr
    Definitions
-      At line 361 in file base.s
+      At line 364 in file base.s
    Uses
-      At line 309 in file base.s
+      At line 312 in file base.s
 
 
 
@@ -924,11 +924,11 @@ ARM Macro Assembler    Page 6 Alphabetic symbol ordering
 Relocatable symbols
 
 Comment: svcoutofrangerr used once
-youlike 00000204
+youlike 00000230
 
 Symbol: youlike
    Definitions
-      At line 337 in file base.s
+      At line 340 in file base.s
    Uses
       None
 Comment: youlike unused
@@ -946,7 +946,7 @@ Symbol: PrintChar
       At line 10 in file base.s
    Uses
       At line 41 in file base.s
-      At line 332 in file base.s
+      At line 335 in file base.s
 
 PrintCharNoReturn 00000000
 
@@ -954,7 +954,7 @@ Symbol: PrintCharNoReturn
    Definitions
       At line 13 in file base.s
    Uses
-      At line 252 in file base.s
+      At line 254 in file base.s
 Comment: PrintCharNoReturn used once
 PrintHello 00000000
 
@@ -970,7 +970,7 @@ Symbol: PrintHex
    Definitions
       At line 8 in file base.s
    Uses
-      At line 330 in file base.s
+      At line 333 in file base.s
 Comment: PrintHex used once
 PrintString 00000000
 
@@ -979,11 +979,11 @@ Symbol: PrintString
       At line 9 in file base.s
    Uses
       At line 44 in file base.s
-      At line 109 in file base.s
-      At line 258 in file base.s
-      At line 303 in file base.s
-      At line 310 in file base.s
-      At line 333 in file base.s
+      At line 110 in file base.s
+      At line 260 in file base.s
+      At line 306 in file base.s
+      At line 313 in file base.s
+      At line 336 in file base.s
 
 PrintStringNoReturn 00000000
 
@@ -991,8 +991,8 @@ Symbol: PrintStringNoReturn
    Definitions
       At line 14 in file base.s
    Uses
-      At line 129 in file base.s
-      At line 168 in file base.s
+      At line 130 in file base.s
+      At line 170 in file base.s
 
 SystemInit 00000000
 
@@ -1017,4 +1017,4 @@ Symbol: fputc
       None
 Comment: fputc unused
 8 symbols
-380 symbols in table
+384 symbols in table
