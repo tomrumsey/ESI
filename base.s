@@ -111,23 +111,26 @@ SVC_Kill
  pop{r2, r3}; pop data about current process, to throw away
  
  mov r3, r0
- pop{r0}; get current process stack pointer
+ pop{r9}; get current process stack pointer
  push{r1}; return id counter to stack
  push{r3} ;return lr
  ;we are now done with the main stack 
  
- ;resume last process here
  
- LDMFD r0!, {r11, r10, r9, r8, r7, r6, r5, r4} ;restore other registers
  MOV r6, lr
  MOV r4, r2
- MSR PSP, r0; update PSP. there is no longer any way of recovering the old process directly 
+ 
  LDR r0, =svckillprocess
  BL PrintStringNoReturn
  MOV r0, r4
  BL PrintDecimal
  ;normal recovery should now be in play
  MOV lr, r6
+ 
+ ;resume last process here
+ MOV r0, r9
+ LDMFD r0!, {r11, r10, r9, r8, r7, r6, r5, r4} ;restore other registers
+ MSR PSP, r0; update PSP. there is no longer any way of recovering the old process directly 
  BX lr
  
 ;create the process addressed by r0
